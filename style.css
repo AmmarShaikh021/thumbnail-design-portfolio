@@ -1086,3 +1086,245 @@ button {
             color: black;
         }
     }
+
+    /* ============================================
+   REVIEWS SECTION
+   ============================================ */
+
+.reviews {
+    padding: 5rem 1.5rem;
+    background: var(--bg-primary);
+}
+
+.reviews-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.reviews-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.review-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.review-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: var(--transition-base);
+}
+
+.review-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+}
+
+.review-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio for 1080x1080 */
+    overflow: hidden;
+}
+
+.review-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-slow);
+}
+
+.review-card:hover .review-image-wrapper img {
+    transform: scale(1.03);
+}
+
+/* Alternating Layout Effect */
+.review-left {
+    transform: translateX(0);
+}
+
+.review-right {
+    transform: translateX(0);
+}
+
+.review-row:nth-child(odd) .review-left {
+    animation: fadeInLeft 0.6s ease forwards;
+}
+
+.review-row:nth-child(odd) .review-right {
+    animation: fadeInRight 0.6s ease forwards;
+}
+
+.review-row:nth-child(even) .review-left {
+    animation: fadeInLeft 0.6s ease 0.1s forwards;
+}
+
+.review-row:nth-child(even) .review-right {
+    animation: fadeInRight 0.6s ease 0.1s forwards;
+}
+
+/* ============================================
+   CONTACT SECTION UPDATES
+   ============================================ */
+
+.contact {
+    padding: 6rem 1.5rem;
+    background: var(--bg-secondary);
+    text-align: center;
+}
+
+.contact-container {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.contact-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0.625rem 0 0.875rem;
+    line-height: 1.2;
+}
+
+.contact-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    max-width: 500px;
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.contact-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.contact-buttons .btn svg {
+    flex-shrink: 0;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.contact-info-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    transition: var(--transition-base);
+}
+
+.contact-info-item:hover {
+    color: var(--accent-primary);
+    border-color: var(--border-hover);
+    background: rgba(205, 0, 253, 0.05);
+}
+
+.contact-info-item svg {
+    color: var(--accent-primary);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE STYLES FOR REVIEWS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .reviews {
+        padding: 4rem 1.25rem;
+    }
+    
+    .review-row {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    
+    .reviews-grid {
+        gap: 1.25rem;
+    }
+    
+    .contact-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .contact-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .review-card {
+        border-radius: var(--radius-md);
+    }
+    
+    .contact-info-item {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.875rem;
+    }
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
