@@ -232,8 +232,8 @@ function formatNumber(num) {
 
 /* Scroll Reveal Animation */
 function initScrollReveal() {
-    // Main reveal elements
-    const revealElements = document.querySelectorAll('.niche-block, .stat-card, .result-item, .section-header');
+    // Main reveal elements - Added review-card
+    const revealElements = document.querySelectorAll('.niche-block, .stat-card, .result-item, .review-card, .section-header');
     
     if (!revealElements.length) return;
     
@@ -308,6 +308,71 @@ function initScrollReveal() {
     nicheBlocks.forEach(block => {
         nicheObserver.observe(block);
     });
+    
+    // Stagger animation for review cards
+    const reviewRows = document.querySelectorAll('.review-row');
+    
+    const reviewObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const cards = entry.target.querySelectorAll('.review-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('review-revealed');
+                    }, index * 150);
+                });
+                reviewObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    
+    // Add CSS for review card animation
+    const reviewStyle = document.createElement('style');
+    reviewStyle.textContent = `
+        .review-card {
+            opacity: 0;
+        }
+        .review-card.review-revealed {
+            opacity: 1;
+        }
+        .review-row:nth-child(odd) .review-left.review-revealed {
+            animation: fadeInLeft 0.6s ease forwards;
+        }
+        .review-row:nth-child(odd) .review-right.review-revealed {
+            animation: fadeInRight 0.6s ease forwards;
+        }
+        .review-row:nth-child(even) .review-left.review-revealed {
+            animation: fadeInLeft 0.6s ease forwards;
+        }
+        .review-row:nth-child(even) .review-right.review-revealed {
+            animation: fadeInRight 0.6s ease forwards;
+        }
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    `;
+    document.head.appendChild(reviewStyle);
+    
+    reviewRows.forEach(row => {
+        reviewObserver.observe(row);
+    });
 }
 
 /* Lazy Loading Enhancement */
@@ -328,8 +393,6 @@ function initLazyLoading() {
             
             img.addEventListener('error', () => {
                 img.style.opacity = '0.5';
-                // Optional: Set a placeholder image
-                // img.src = 'path/to/placeholder.jpg';
             });
         }
     });
@@ -365,6 +428,7 @@ function initSmoothScroll() {
 function initLightbox() {
     const nicheItems = document.querySelectorAll('.niche-item');
     const resultItems = document.querySelectorAll('.result-item');
+    const reviewCards = document.querySelectorAll('.review-card'); // Added reviews
     
     // Create lightbox elements
     const lightbox = document.createElement('div');
@@ -411,6 +475,10 @@ function initLightbox() {
         });
         resultItems.forEach(item => {
             const img = item.querySelector('img');
+            if (img) allImages.push(img.src);
+        });
+        reviewCards.forEach(card => {
+            const img = card.querySelector('img');
             if (img) allImages.push(img.src);
         });
     }
@@ -591,6 +659,14 @@ function initLightbox() {
         });
     });
     
+    // Event listeners for review cards
+    reviewCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const img = card.querySelector('img');
+            if (img) openLightbox(img.src);
+        });
+    });
+    
     // Close events
     overlay.addEventListener('click', closeLightbox);
     closeBtn.addEventListener('click', closeLightbox);
@@ -642,7 +718,7 @@ function initLightbox() {
     }, { passive: true });
 }
 
-/* Parallax Effect for Hero (Optional Enhancement) */
+/* Parallax Effect for Hero */
 function initParallax() {
     const heroGradient = document.querySelector('.hero-gradient');
     const heroGrid = document.querySelector('.hero-grid');
@@ -706,53 +782,3 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initActiveNavigation();
 });
-
-/* Preloader (Optional) */
-function initPreloader() {
-    const preloader = document.createElement('div');
-    preloader.className = 'preloader';
-    preloader.innerHTML = `
-        <div class="preloader-spinner"></div>
-    `;
-    document.body.appendChild(preloader);
-    
-    const style = document.createElement('style');
-    style.textContent = `
-        .preloader {
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        .preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .preloader-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            preloader.classList.add('hidden');
-            setTimeout(() => preloader.remove(), 400);
-        }, 500);
-    });
-}
-
-// Uncomment to enable preloader
-// initPreloader();
